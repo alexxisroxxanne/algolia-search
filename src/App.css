@@ -1,28 +1,5 @@
-.App {
+.app {
+  display: grid;
   position: relative;
   top: 25%;
-  width: 75%;
-  margin: auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 0;
-  grid-auto-rows: minmax(100px, auto);
-  text-align: center;
-  background: white;
-  box-shadow: 0 3px 10px grey;
-}
-.search-placement {
-  border: 1px solid red;
-  grid-column: 1 / 4;
-  grid-row: 1;
-}
-.sidebar-placement {
-  border: 1px solid red;
-  grid-column: 1;
-  grid-row: 2 / 5;
-}
-.results-placement {
-  border: 1px solid red;
-  grid-column: 2 / 4;
-  grid-row: 2 / 5;
 }

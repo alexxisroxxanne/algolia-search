@@ -12,7 +12,9 @@ class Results extends Component {
 
   render() {
     return (
-      <div>Results</div>
+      <div>
+        Results
+      </div>
     );
   }
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import Sidebar from '../sidebar_filters_and_ranks/sidebar.component';
+import Results from '../results_list/results.component';
 import './search.component.css';
-
 /**
   * The Search component implements the Algolia search API to allow the user to find restaurants
   */
@@ -12,7 +13,11 @@ class Search extends Component {
 
   render() {
     return (
-      <div>Search</div>
+      <div className="container">
+        <div className="search-placement">Search</div>
+        <div className="sidebar-placement"><Sidebar /></div>
+        <div className="results-placement"><Results /></div>
+      </div>
     );
   }
 }
