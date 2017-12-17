@@ -2,8 +2,8 @@ import algoliasearch from 'algoliasearch';
 import algoliasearchHelper from 'algoliasearch-helper';
 import React, { Component } from 'react';
 import Search from '../search_bar/Search.component';
-import config from './config';
-import './App.css';
+import config from '../../config';
+import './App.component.css';
 
 
 const appId = config['APP_ID'],

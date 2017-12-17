@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Sidebar from '../sidebar_filters_and_ranks/sidebar.component';
-import Results from '../results_list/results.component';
-import './search.component.css';
+import Sidebar from '../sidebar_filters_and_ranks/Sidebar.component';
+import Results from '../results_list/Results.component';
+import './Search.component.css';
 /**
   * The Search component implements the Algolia search API to allow the user to find restaurants
   */

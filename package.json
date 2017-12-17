@@ -4,6 +4,8 @@
   "private": true,
   "homepage": "http://alexxisroxxanne.github.io/algolia-search",
   "dependencies": {
+    "algoliasearch": "^3.24.8",
+    "algoliasearch-helper": "^2.23.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-scripts": "1.0.17"
