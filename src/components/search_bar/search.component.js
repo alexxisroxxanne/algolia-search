@@ -14,7 +14,13 @@ class Search extends Component {
   render() {
     return (
       <div className="container">
-        <div className="search-placement">Search</div>
+        <div className="search-placement search-bar">
+          <input
+            className="search-input"
+            type="text"
+            placeholder="Search for Restaurants by Name, Cuisine, Location">
+          </input>
+        </div>
         <div className="sidebar-placement"><Sidebar /></div>
         <div className="results-placement"><Results /></div>
       </div>
