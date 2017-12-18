@@ -12,11 +12,16 @@ class Results extends Component {
   }
 
   getListElements() {
-    return this.props.listResults.map( (restaurant) =>
-      <div>
-        {restaurant.name}
-      </div>
-    );
+    return this.props.listResults.map( (restaurant) => {
+      return (
+        <div className="restaurant_result">
+          <img src={restaurant["image_url"]} alt="restaurant picture"></img>
+          <span>
+            <a href={restaurant["reserve_url"]} target="_blank">{restaurant.name}</a>
+          </span>
+        </div>
+      );
+    });
   }
 
   convertMsToSeconds() {
@@ -29,9 +34,18 @@ class Results extends Component {
     let time = this.convertMsToSeconds();
     return (
       <div className="results">
-        <h3>{numHits} results found</h3><p> in {time} seconds</p>
+        <div className="results_header">
+          <span>{numHits} results found</span>
+          <span className="results_time"> in {time} seconds</span>
+        </div>
+        <div className="results_border"></div>
         {this.getListElements()}
-        <button>Show More</button>
+        <button
+          onClick={this.props.onButtonClick}
+          className="show_more_button"
+        >
+          Show More
+        </button>
       </div>
     );
   }

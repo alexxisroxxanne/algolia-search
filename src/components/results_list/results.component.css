@@ -1,0 +1,49 @@
+.results {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 0;
+  grid-auto-rows: minmax(20px, auto);
+  margin: 2em 1em;
+  text-align: left;
+}
+.results_header {
+  grid-column: 1 / 5;
+  grid-row: 1;
+  font-size: 1em;
+}
+.results_time {
+  font-size: 0.75em;
+  color: grey;
+}
+.show_more_button {
+  grid-column: 2/5;
+  background: transparent;
+  border-radius: 3px;
+  border: 1px solid lightgray;
+  height: 30px;
+  color: gray;
+}
+.results_border {
+  grid-column: 4 / 6;
+  grid-row: 1;
+  border-bottom: 1px solid lightgray;
+}
+.restaurant_result {
+  grid-column: 1 / 6;
+  font-size: 1em;
+  padding: 15px;
+}
+.restaurant_result img {
+  width: 75px;
+  height: 75px;
+  border-radius: 3px;
+  border: 1px solid black;
+}
+.restaurant_result span {
+  padding: 15px;
+}
+.restaurant_result a {
+  vertical-align: top;
+  color: #000;
+  text-decoration: none;
+}

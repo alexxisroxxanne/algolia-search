@@ -36,6 +36,7 @@ class Search extends Component {
       }
     };
     this.handleChange = this.handleChange.bind(this);
+    this.getMoreResults = this.getMoreResults.bind(this);
     this.listenForResults();
     this.listenForErrors();
     this.getFilterOptions();
@@ -195,6 +196,12 @@ class Search extends Component {
     });
   }
 
+  getMoreResults() {
+    this.props.listHelper
+      .setQuery(this.state.searchValue)
+      .search({hitsPerPage: 6})
+  }
+
   render() {
     let filters = this.renderFilters();
     return (
@@ -217,6 +224,7 @@ class Search extends Component {
             infoResults={this.state.infoResults}
             timeInMS={this.state.proccesingTime}
             numHits={this.state.numberOfHits}
+            onButtonClick={this.getMoreResults}
           />
         </div>
         {this.state.searchError}
