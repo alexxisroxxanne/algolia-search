@@ -26,7 +26,9 @@ class App extends Component {
       }
     );
     this.restaurantInfoHelper = algoliasearchHelper(
-      client, restInfoIndex, {}
+      client, restInfoIndex, {
+        hitsPerPage: 1
+      }
     );
   }
 
@@ -35,7 +37,7 @@ class App extends Component {
       <div className="app">
         <Search
           listHelper={this.restaurantListHelper}
-          infoHelper={this.restaurantListHelper}
+          infoHelper={this.restaurantInfoHelper}
         />
       </div>
     );
