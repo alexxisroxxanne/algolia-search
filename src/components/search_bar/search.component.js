@@ -17,11 +17,26 @@ class Search extends Component {
       numberOfHits: 0,
       proccesingTime: 0,
       searchValue: '',
-      searchError: ''
+      searchError: '',
+      filters: {
+        'food_type': {
+          label: 'Food Type / Cuisine',
+          queries: []
+        },
+        'stars_count': {
+          label: 'Rating',
+          queries: []
+        },
+        'payment_options': {
+          label: 'Payment Options',
+          queries: []
+        }
+      }
     };
     this.handleChange = this.handleChange.bind(this);
     this.listenForResults();
     this.listenForErrors();
+    this.getFilterOptions();
   }
 
   handleChange(event) {
@@ -36,34 +51,31 @@ class Search extends Component {
   }
 
   listenForResults(shouldNotUpdateState) {
-    // avoid updating the state when grabbing the filter lists
-      let context = this;
-      this.props.listHelper.on('result', (restaurantList) => {
-        // if (!shouldNotUpdateState) {
-        // }
-        console.log('restaurantList', restaurantList)
-        context.setState({
-          listResults: restaurantList.hits,
-          numberOfHits: restaurantList.nbHits,
-          proccesingTime: restaurantList.processingTimeMS
-        }, () => {
-          context.state.listResults.forEach( (hit) => {
-            context.props.infoHelper
-              .setQuery(hit.objectID)
-              .setQueryParameter('aroundLatLngViaIP', false)
-              .search();
-          });
+    let context = this;
+    this.props.listHelper.on('result', (restaurantList) => {
+      console.log('restaurantList', restaurantList)
+      let list = restaurantList.hits.length > 1 ?
+                 restaurantList.hits :
+                 [...context.state.listResults, restaurantList.hits];
+      context.setState({
+        listResults: list,
+        numberOfHits: restaurantList.nbHits,
+        proccesingTime: restaurantList.processingTimeMS
+      }, () => {
+        context.state.listResults.forEach( (hit) => {
+          context.props.infoHelper
+            .setQuery(hit.objectID)
+            .setQueryParameter('aroundLatLngViaIP', false)
+            .search();
         });
       });
-      this.props.infoHelper.on('result', (restaurantInfo) => {
-        // if (!shouldNotUpdateState) {
-        // }
-        let fullList = [...context.state.infoResults, restaurantInfo];
-        context.setState({ infoResults: fullList }, () => {
-          console.log('restaurantInfo ', restaurantInfo)
-        });
+    });
+    this.props.infoHelper.on('result', (restaurantInfo) => {
+      let fullList = [...context.state.infoResults, restaurantInfo];
+      context.setState({ infoResults: fullList }, () => {
+        console.log('restaurantInfo ', restaurantInfo)
       });
-    // }
+    });
   }
 
   listenForErrors() {
@@ -88,21 +100,76 @@ class Search extends Component {
       "payment_options": ['AMEX', 'Discover', 'MasterCard', 'Visa']
     };
     return _.reduce(options, (filters, filterOptions, filterName) => {
-      _.reduce(filterOptions, (html, option) => {
+      _.forEach(filterOptions, (option) => {
         let needsListHelper = filterName === 'payment_options';
         let helper = needsListHelper ? context.props.listHelper : context.props.infoHelper;
         helper
           .setQuery(option)
           .setQueryParameter('aroundLatLngViaIP', needsListHelper)
-          .searchOnce({}, (error, content, state) => {
-            console.log('this one got claled', content)
-          })
-      }, '');
+          .searchOnce({}, (error, content) => {
+            console.log('content: ', content)
+            let filterState = context.state.filters;
+            filterState[filterName].helper = helper;
+            filterState[filterName].isList = needsListHelper;
+            filterState[filterName].queries.push({ query: option, hits: content.nbHits});
+            context.setState({filters: filterState});
+          });
+      });
     }, {});
   }
 
+  renderFilters() {
+    let applyfilter = this.applyfilter;
+    return _.map(this.state.filters, (filter) => {
+      let filterOptions = filter.queries.map( (option) =>
+        <div className="filter_option">
+          <button
+            onClick={ () => this.applyFilter(filter.helper, option.query, filter.isList) }
+          >
+            <div className="option_title">{option.query}</div>
+          </button>
+          <div className="hits">{option.hits}</div>
+        </div>
+      );
+      return (
+        <div className="filter_list">
+          <h3 className="filter_header">{filter.label}</h3>
+          {filterOptions}
+        </div>
+      );
+    });
+  }
+
+  applyFilter(helper, query, isList) {
+    if (isList) {
+      helper
+        .setQuery(query)
+        .setQueryParameter('aroundLatLngViaIP', isList)
+        .search();
+    } else {
+      let context = this;
+      helper
+        .setQuery(query)
+        .searchOnce({ hitsPerPage: 3}, (error, restaurantInfoItems) => {
+          restaurantInfoItems.hits.forEach( (hit) => {
+            _.each(hit, (val, prop) => {
+              if (prop !== 'objectID') {
+                let actualId = typeof val === 'string' ? val.slice(0, val.indexOf(';')) : undefined;
+                if (actualId) {
+                  context.props.listHelper
+                    .setQuery(actualId)
+                    .setQueryParameter('aroundLatLngViaIP', isList)
+                    .search({hitsPerPage: 1});
+                }
+              }
+            })
+          });
+        })
+    }
+  }
+
   render() {
-    this.getFilterOptions()
+    let filters = this.renderFilters();
     return (
       <div className="container">
         <div className="search-placement search-bar">
@@ -115,15 +182,7 @@ class Search extends Component {
           </input>
         </div>
         <div className="sidebar-placement sidebar">
-          <div>
-            <h3>Cuisine/Food Type</h3>
-          </div>
-          <div>
-            <h3>Rating</h3>
-          </div>
-          <div>
-            <h3>Payment Options</h3>
-          </div>
+          {filters}
         </div>
         <div className="results-placement">
           <Results
