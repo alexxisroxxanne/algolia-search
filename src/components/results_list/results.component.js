@@ -4,6 +4,7 @@ import './Results.component.css';
 
 /**
   * The Results component displays the list of matching restaurants to the user
+  * TODO: restructure data then re-implement the restaurant additional info
   */
 
 class Results extends Component {
@@ -95,7 +96,7 @@ class Results extends Component {
   render() {
     let numHits = this.props.numHits;
     let time = this.convertMsToSeconds();
-    return (
+    return numHits ? (
       <div className="results">
         <div className="results_header">
           <span>{numHits} results found</span>
@@ -110,7 +111,11 @@ class Results extends Component {
           Show More
         </button>
       </div>
-    );
+    ) : (
+      <div className="results">
+        <span className="results_header">Search for restaurants</span>
+      </div>
+    )
   }
 }
 

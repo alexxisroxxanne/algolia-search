@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import Sidebar from '../sidebar_filters_and_ranks/Sidebar.component';
 import Results from '../results_list/Results.component';
 import emptyStar from '../../resources/graphics/star-empty.png'
 import fullStar from '../../resources/graphics/stars-plain.png'
@@ -9,6 +8,10 @@ import './Search.component.css';
 
 /**
   * The Search component implements the Algolia search API to allow the user to find restaurants
+  * TODO: handle filter and search combination
+  * TODO: refactor for DRYness
+  * TODO: implement better data structure for infoResults
+  * TODO: add mobile classes for better mobile design
   */
 class Search extends Component {
   constructor(props) {
@@ -56,7 +59,6 @@ class Search extends Component {
   listenForResults(shouldNotUpdateState) {
     let context = this;
     this.props.listHelper.on('result', (restaurantList) => {
-      console.log('restaurantList', restaurantList)
       let list = restaurantList.hits.length > 1 ?
                  restaurantList.hits :
                  [...context.state.listResults, restaurantList.hits];
@@ -75,9 +77,7 @@ class Search extends Component {
     });
     this.props.infoHelper.on('result', (restaurantInfo) => {
       let fullList = [...context.state.infoResults, restaurantInfo];
-      context.setState({ infoResults: fullList }, () => {
-        console.log('restaurantInfo ', restaurantInfo)
-      });
+      context.setState({ infoResults: fullList });
     });
   }
 
@@ -110,7 +110,6 @@ class Search extends Component {
           .setQuery(option)
           .setQueryParameter('aroundLatLngViaIP', needsListHelper)
           .searchOnce({}, (error, content) => {
-            console.log('content: ', content)
             let filterState = context.state.filters;
             filterState[filterName].helper = helper;
             filterState[filterName].isList = needsListHelper;

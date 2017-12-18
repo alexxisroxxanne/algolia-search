@@ -40,6 +40,7 @@
   margin: auto;
   border-radius: 5px;
   border-width: 1px;
+  padding-left: 10px;
 }
 .filter_list {
   display: grid;
@@ -80,8 +81,8 @@
   border-color: transparent;
   background: transparent;
 }
-.filter_option:hover, .filter_option:hover .option_title {
-  background-color: teal;
+.filter_option:hover, .filter_option:hover .option_title, .filter_option:hover .hits {
+  background-color: #2897C5;
   color: #fff;
 }
 .stars_button:hover, .stars:hover {
@@ -91,4 +92,5 @@
 .star {
   max-height: 15px;
   max-width: 15px;
+  float: left;
 }
