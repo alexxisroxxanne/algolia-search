@@ -2,6 +2,8 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import Sidebar from '../sidebar_filters_and_ranks/Sidebar.component';
 import Results from '../results_list/Results.component';
+import emptyStar from '../../resources/graphics/star-empty.png'
+import fullStar from '../../resources/graphics/stars-plain.png'
 import './Search.component.css';
 
 
@@ -120,17 +122,33 @@ class Search extends Component {
 
   renderFilters() {
     let applyfilter = this.applyfilter;
+    let replaceRatingsWithStars = this.replaceRatingsWithStars;
     return _.map(this.state.filters, (filter) => {
-      let filterOptions = filter.queries.map( (option) =>
-        <div className="filter_option">
+      let filterOptions = filter.queries.map( (option) => {
+        let mainButtonContent = (
           <button
             onClick={ () => this.applyFilter(filter.helper, option.query, filter.isList) }
           >
             <div className="option_title">{option.query}</div>
           </button>
-          <div className="hits">{option.hits}</div>
-        </div>
-      );
+        );
+        let stars = replaceRatingsWithStars(option.query);
+        return filter.label === 'Rating' ? (
+          <div className="filter_option stars">
+            <button
+              onClick={() => this.applyFilter(filter.helper, option.query, filter.isList) }
+              className="stars_button"
+            >
+              {stars}
+            </button>
+          </div>
+        ) : (
+          <div className="filter_option">
+            {mainButtonContent}
+            <div className="hits">{option.hits}</div>
+          </div>
+        );
+      });
       return (
         <div className="filter_list">
           <h3 className="filter_header">{filter.label}</h3>
@@ -168,6 +186,15 @@ class Search extends Component {
     }
   }
 
+  replaceRatingsWithStars(minStars) {
+    let stars = [0, 1, 2, 3, 4];
+    return stars.map( (star, index) => {
+      return index <= minStars ?
+            (<img className="star" src={fullStar} alt="star count"></img>) :
+            (<img className="star" src={emptyStar} alt="star count"></img>);
+    });
+  }
+
   render() {
     let filters = this.renderFilters();
     return (
@@ -181,7 +208,7 @@ class Search extends Component {
             onChange={this.handleChange}>
           </input>
         </div>
-        <div className="sidebar-placement sidebar">
+        <div className="sidebar-placement">
           {filters}
         </div>
         <div className="results-placement">

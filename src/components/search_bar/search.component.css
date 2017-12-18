@@ -70,6 +70,8 @@
   text-align: right;
   margin: 0 5px 0 0;
   font-size: 0.5em;
+  line-height: 2.5;
+  color: grey;
 }
 .filter_option button {
   grid-column: 1 / 3;
@@ -81,4 +83,12 @@
 .filter_option:hover, .filter_option:hover .option_title {
   background-color: teal;
   color: #fff;
+}
+.stars_button:hover, .stars:hover {
+  background-color: #fff;
+  color: #000;
+}
+.star {
+  max-height: 15px;
+  max-width: 15px;
 }
