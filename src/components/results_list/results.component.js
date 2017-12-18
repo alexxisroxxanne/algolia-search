@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import './Results.component.css';
 
@@ -9,20 +10,82 @@ class Results extends Component {
   constructor(props) {
     super(props);
     this.getListElements = this.getListElements.bind(this);
+    this.getRestaurantInfo = this.getRestaurantInfo.bind(this);
+    this.convertInfoToObject = this.convertInfoToObject.bind(this);
+    this.getStarsFromRating = this.props.getStarsFromRating.bind(this);
   }
 
   getListElements() {
+    let getInfo = this.getRestaurantInfo;
+    let convertInfoToObject = this.convertInfoToObject;
+    let getInfoHtml = this.getHtmlFromObject;
+    let context = this;
     return this.props.listResults.map( (restaurant) => {
+      let moreInfo = getInfo(restaurant);
+      let infoStructure = moreInfo ? convertInfoToObject(moreInfo) : null;
+      let infoHtml = getInfoHtml(infoStructure, context);
       return (
         <div className="restaurant_result">
-          <img src={restaurant["image_url"]} alt="restaurant picture"></img>
-          <span>
-            <a href={restaurant["reserve_url"]} target="_blank">{restaurant.name}</a>
-          </span>
+          <img className="restaurant_img" src={restaurant["image_url"]}></img>
+          <div className="restaurant_info">
+            <a className="restaurant_title"
+               href={restaurant["reserve_url"]}
+               target="_blank"
+            >
+              {restaurant.name}
+            </a>
+            {infoHtml}
+          </div>
         </div>
       );
     });
   }
+
+  getRestaurantInfo(restaurant) {
+    return _.find(this.props.infoResults, (infoResult) => infoResult.query === restaurant.objectID );
+  }
+
+  convertInfoToObject(infoHit) {
+    let hit = infoHit.hits[0];
+    let info = _.find(hit, (value, prop) => prop !== 'objectID');
+    const labels = [
+      'objectID',
+      'food_type',
+      'stars_count',
+      'reviews_count',
+      'neighborhood',
+      'phone_number',
+      'price_range',
+      'dining_style'
+    ];
+    let valsArray = info.split(';');
+    return _.reduce(valsArray, (valMap, val, index) => {
+      valMap[labels[index]] = val;
+      return valMap;
+    }, {});
+  }
+
+  getHtmlFromObject(info, context) {
+    if (!info) { return (<span></span>); }
+    let stars = context.getStarsFromRating(info['stars_count']);
+    return (
+      <div>
+        <div className="restaurant_rating">
+          <span className="stars_text restaurant_details">
+            {info['stars_count']}
+          </span>
+           <span className="restaurant_details">{stars}</span>
+          <span className="restaurant_details">
+            ({info['reviews_count']} reviews)
+          </span>
+        </div>
+        <div className="restaurant_details">
+          {info['food_type']} | {info['neighborhood']} | {info['price_range']}
+        </div>
+      </div>
+    );
+  }
+
 
   convertMsToSeconds() {
     let seconds = 0.0001 * this.props.timeInMS;

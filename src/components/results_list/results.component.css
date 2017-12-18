@@ -30,20 +30,48 @@
 }
 .restaurant_result {
   grid-column: 1 / 6;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 5px;
+  grid-auto-rows: minmax(20px, auto);
   font-size: 1em;
   padding: 15px;
 }
-.restaurant_result img {
-  width: 75px;
-  height: 75px;
+.restaurant_result .restaurant_img {
+  width: 90px;
+  height: 90px;
   border-radius: 3px;
-  border: 1px solid black;
+  border: 1px solid lightgray;
 }
 .restaurant_result span {
-  padding: 15px;
 }
 .restaurant_result a {
   vertical-align: top;
   color: #000;
   text-decoration: none;
+}
+.restaurant_img {
+  grid-column: 1 / 2;
+
+}
+.restaurant_info {
+  grid-column: 2 / 6;
+}
+.restaurant_title {
+  font-weight: bold;
+  font-weight: 1.1em;
+  color: gray;
+}
+.restaurant_details {
+  color: lightgray;
+  font-size: 0.9em;
+}
+.stars_text.restaurant_details {
+  color: gold;
+}
+.restaurant_rating {
+  margin: 10px 0;
+}
+.restaurant_rating .restaurant_details {
+  padding: 0 10px 0 0 ;
 }

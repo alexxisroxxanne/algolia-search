@@ -204,6 +204,7 @@ class Search extends Component {
 
   render() {
     let filters = this.renderFilters();
+    let getStars = this.replaceRatingsWithStars;
     return (
       <div className="container">
         <div className="search-placement search-bar">
@@ -225,6 +226,7 @@ class Search extends Component {
             timeInMS={this.state.proccesingTime}
             numHits={this.state.numberOfHits}
             onButtonClick={this.getMoreResults}
+            getStarsFromRating={getStars}
           />
         </div>
         {this.state.searchError}
